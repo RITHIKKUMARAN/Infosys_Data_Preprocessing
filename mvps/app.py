@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 # -------------------------
 load_dotenv()
 HF_API_KEY = os.getenv("HF_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 st.set_page_config(
     page_title="NeoGlass — Colorful Summarizer",
@@ -217,7 +218,7 @@ st.markdown(CUSTOM_STYLE, unsafe_allow_html=True)
 # -------------------------
 @st.cache_resource
 def get_pipeline():
-    return SummarizationPipeline(HF_API_KEY)
+    return SummarizationPipeline()
 
 # If API key missing -> stop with an explanation (clean)
 if not HF_API_KEY:
@@ -291,13 +292,21 @@ with col2:
     st.markdown("<div class='neo-card'>", unsafe_allow_html=True)
     st.markdown("<div class='section-title'>📊 Output</div>", unsafe_allow_html=True)
 
+    if 'last_action' not in st.session_state:
+        st.session_state.last_action = None
+
+    if summarize_btn:
+        st.session_state.last_action = 'summarize'
+    if paraphrase_btn:
+        st.session_state.last_action = 'paraphrase'
+
     if not input_text:
         st.info("👈 Paste some text in the left panel and choose Summarize or Paraphrase.")
         st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
         st.write("Quick sample ideas to try:")
         st.markdown("- Meeting notes (5-15 paragraphs)\n- Blog post draft\n- Research paper abstract + intro")
     else:
-        if summarize_btn:
+        if st.session_state.last_action == 'summarize':
             if not pipeline_ready:
                 st.error("Summarization backend not available. Check API key and pipeline logs.")
             else:
@@ -312,7 +321,7 @@ with col2:
                             st.download_button("⬇️ Download Summary", data=summary, file_name="summary.txt", mime="text/plain")
                     except Exception as e:
                         st.error(f"Error generating summary: {str(e)}")
-        elif paraphrase_btn:
+        elif st.session_state.last_action == 'paraphrase':
             if not pipeline_ready:
                 st.error("Paraphrase backend not available. Check API key and pipeline logs.")
             else:
