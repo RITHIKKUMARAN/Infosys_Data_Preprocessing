@@ -1,111 +1,82 @@
-import time
+import os
 import requests
+from dotenv import load_dotenv
 
 
 class Paraphraser:
-    """Paraphrasing using T5 model. Generates multiple reworded versions of input text.
-
-    Model: ramsrigouthamg/t5_paraphraser
+    """
+    Paraphrasing using Groq Cloud's LLaMA 3.1 models.
+    Models:
+      - llama-3.1-8b-instant  (fast, good quality)
+      - llama-3.1-70b-versatile (higher quality, slower)
     """
 
-    def __init__(self, api_key, timeout=30):
-        self.api_key = api_key
-        self.api_url = "https://api-inference.huggingface.co/models/tuner007/pegasus_paraphrase"
-        self.headers = {"Authorization": f"Bearer {api_key}"}
-        self.timeout = timeout
+    def __init__(self, api_key=None, model_name="llama-3.1-8b-instant"):
+        load_dotenv()
 
-    def _generate_paraphrases(self, text, num_return_sequences):
-        """Internal helper to call Hugging Face API."""
-        payload = {
-            "inputs": f"paraphrase: {text}",
-            "parameters": {
-                "max_length": 256,
-                "num_return_sequences": num_return_sequences,
-                "num_beams": max(5, num_return_sequences),
-                "temperature": 0.9,
-                "top_p": 0.95,
-                "do_sample": True
-            }
+        # ✅ Support both manual and env-based API key
+        self.api_key = api_key or os.getenv("GROQ_API_KEY")
+
+        if not self.api_key:
+            raise ValueError("❌ GROQ_API_KEY not found in .env")
+
+        # ✅ Correct REST endpoint (no '/openai/')
+        self.api_url = "https://api.groq.com/openai/v1/chat/completions"
+
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
         }
-
-        # Retry logic for model loading
-        for attempt in range(3):
-            try:
-                response = requests.post(self.api_url, headers=self.headers, json=payload, timeout=self.timeout)
-            except requests.exceptions.Timeout:
-                # Let caller handle timeout messaging
-                raise
-            except Exception as e:
-                return [f"❌ Error calling paraphrase API: {str(e)}"]
-
-            if response.status_code == 503:
-                # Model is loading on the HF side; wait and retry
-                if attempt < 2:
-                    time.sleep(20)
-                    continue
-                else:
-                    return ["⚠️ Model still loading. Please try again later."]
-
-            if response.status_code == 200:
-                try:
-                    results = response.json()
-                except Exception:
-                    return ["⚠️ Received invalid JSON from API."]
-
-                if isinstance(results, list) and len(results) > 0:
-                    paraphrases = []
-                    for r in results:
-                        # Common fields: 'generated_text', 'summary_text', or plain string
-                        if isinstance(r, dict):
-                            val = r.get('generated_text') or r.get('summary_text') or ''
-                        else:
-                            val = str(r)
-                        val = val.strip()
-                        if val:
-                            paraphrases.append(val)
-
-                    return paraphrases if paraphrases else ["⚠️ No paraphrase generated."]
-
-                # Unexpected response shape
-                return ["⚠️ No paraphrase generated."]
-
-            # Non-200 and non-503 responses
-            return [f"❌ API Error: {response.status_code} - {response.text}"]
-
-        return ["⚠️ Model still loading. Please try again later."]
+        self.model_name = model_name
 
     def paraphrase(self, text, num_return_sequences=3):
         """
-        Generate multiple paraphrased versions of input text.
-        Returns a list of strings or a single-element list containing an error message.
+        Generate paraphrased versions of input text using Groq Cloud API.
         """
-        if not isinstance(text, str) or not text.strip():
-            return ["⚠️ Input text is empty! Please provide valid content."]
+        if not text.strip():
+            return ["⚠️ Please provide valid text."]
 
-        num_return_sequences = min(max(1, int(num_return_sequences)), 5)
+        prompt = (
+            f"Paraphrase the following text into {num_return_sequences} distinct, natural, "
+            f"and fluent English variations:\n\n{text}"
+        )
+
+        payload = {
+            "model": self.model_name,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful AI that paraphrases text clearly and naturally."
+                },
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.9,
+            "max_tokens": 400
+        }
 
         try:
-            return self._generate_paraphrases(text, num_return_sequences)
-        except requests.exceptions.Timeout:
-            return ["❌ Request timeout. Please try again."]
+            response = requests.post(self.api_url, headers=self.headers, json=payload, timeout=60)
+
+            if response.status_code == 200:
+                data = response.json()
+                text_response = data["choices"][0]["message"]["content"]
+                # Split into distinct paraphrases
+                lines = [line.strip() for line in text_response.split("\n") if line.strip()]
+                return lines[:num_return_sequences]
+            else:
+                return [f"❌ API Error {response.status_code}: {response.text}"]
+
         except Exception as e:
             return [f"❌ Error: {str(e)}"]
 
 
 if __name__ == "__main__":
-    # Quick local test (requires HF_API_KEY in env)
-    import os
-    from dotenv import load_dotenv
+    paraphraser = Paraphraser(model_name="llama-3.1-8b-instant")
+    text = "Machine learning is changing the world rapidly."
 
-    load_dotenv()
-    HF_API_KEY = os.getenv("HF_API_KEY")
-    if not HF_API_KEY:
-        print("⚠️ Please set HF_API_KEY in your .env file")
-    else:
-        p = Paraphraser(HF_API_KEY)
-        text = "Machine learning is changing the world rapidly."
-        print("\n✨ Input:", text)
-        print("\n🔁 Paraphrased Versions:\n")
-        results = p.paraphrase(text, num_return_sequences=3)
-        for idx, r in enumerate(results, 1):
-            print(f"{idx}. {r}")
+    print(f"\n✨ Input: {text}")
+    print(f"🤖 Using Model: {paraphraser.model_name}\n")
+
+    results = paraphraser.paraphrase(text, num_return_sequences=3)
+    for i, r in enumerate(results, 1):
+        print(f"{i}. {r}")
