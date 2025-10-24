@@ -71,49 +71,50 @@ cd mvps
 
 ### Setup Virtual Environment
 
-# Windows
-python -m venv venv
+#### Windows
+python -m venv venv<br>
 venv\Scripts\activate
 
-# macOS/Linux
-python3 -m venv venv
+#### macOS/Linux
+python3 -m venv venv<br>
 source venv/bin/activate
 
-### Install Dependencies
+#### Install Dependencies
 
 pip install -r requirements.txt
 
-### Create a .env file in the root directory:
+#### Create a .env file in the root directory:
 
-HF_API_KEY="your_hugging_face_api_key_here"
-GROQ_API_KEY="your_groq_api_key_here"
+HF_API_KEY="your_hugging_face_api_key_here"<br>
+GROQ_API_KEY="your_groq_api_key_here"<br>
 </details> <details> <summary>🚀 Running the Application</summary>
-streamlit run app.py
-Open your browser at: http://localhost:8501
+streamlit run app.py<br>
+Open your browser at: http://localhost:8501<br>
 
-</details> <details> <summary>🧪 Running Tests</summary>
-python test_run.py
+</details> <details> <summary>🧪 Running Tests</summary><br>
+python test_run.py<br>
 This validates all backend modules and prints results in the console.
 
-</details> <details> <summary>🤝 Contributing</summary>
-We welcome contributions!
+</details> <details> <summary>🤝 Contributing</summary><br>
+We welcome contributions!<br>
 
-Fork the repo
+Fork the repo<br>
 
-Create a branch:
-git checkout -b feature/AmazingFeature
+Create a branch:<br>
+git checkout -b feature/AmazingFeature<br>
 
-Commit changes:
+Commit changes:<br>
 git commit -m "Add some AmazingFeature"
+<br>
 
-Push branch:
+Push branch:<br>
 git push origin feature/AmazingFeature
-
-Open a Pull Request
+<br>
+Open a Pull Request<br>
 
 </details> <details> <summary>📄 License</summary>
-Licensed under Apache-2.0. See LICENSE
+<br>Licensed under Apache-2.0. See <a href="https://github.com/RITHIKKUMARAN/Infosys_Data_Preprocessing/blob/main/LICENSE">LICENSE</a>
 
-Built with ❤️ and modern AI.
+<br>Built with ❤️ and modern AI.
 
 </details>
