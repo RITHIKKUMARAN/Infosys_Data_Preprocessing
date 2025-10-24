@@ -1,3 +1,4 @@
+
 # 📝 NeoGlass Summarizer & Paraphraser
 
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/) 
@@ -24,8 +25,27 @@
 | **Modular Pipeline** | Clean backend pipeline integrating all AI services | 🛠️ |
 
 ---
+## 📂 File Structure
+<pre>
+mvps/
+│
+├── 📂 mvp/                    # Core application modules
+│   ├── __init__.py            # Package initializer
+│   ├── abstractive.py         # Abstractive summarization
+│   ├── extractive.py          # Extractive summarization
+│   ├── mvp_pipeline.py        # Main processing pipeline
+│   ├── paraphraser.py         # Paraphrasing module
+│   └── test_run.py            # Test running pipeline
+│
+├── .env                       # Environment variables for API keys
+├── .gitignore                 # Git ignore file
+├── app.py                     # Main app script
+├── config.yaml                # Main YAML configuration
+├── pyproject.toml             # Project configuration for Python
+└── README.md                  # Project README
+</pre>
+---
 
-<details>
 <summary>⚙️ Setup & Installation</summary>
 
 ### Prerequisites
