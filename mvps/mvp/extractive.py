@@ -1,11 +1,17 @@
 import requests
+import yaml
 
 class ExtractiveSummarizer:
-    """ Extractive summarization using BART model. Selects and extracts important sentences from the original text. """
-    def __init__(self, api_key):
+    """ Extractive summarization using multiple models (BART, T5, Pegasus). """
+    def __init__(self, api_key, model_name='bart'):
         self.api_key = api_key
-        self.api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
         self.headers = {"Authorization": f"Bearer {api_key}"}
+
+        with open('config.yaml', 'r') as f:
+            config = yaml.safe_load(f)
+        
+        model_config = config['models']['summarization'].get(model_name, config['models']['summarization']['bart'])
+        self.api_url = f"https://api-inference.huggingface.co/models/{model_config['name']}"
 
     def summarize(self, text, length='medium'):
         """
