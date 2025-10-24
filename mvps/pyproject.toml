@@ -7,7 +7,7 @@ name = "text_summarization_project"
 version = "0.1.0"
 description = "Text summarization and paraphrasing project"
 authors = [
-    { name = "Thangarasu", email = "thangamani1128@gmail.com" }
+    { name = "Rithik Kumaran K", email = "rithikkumarank@gmail.com" }
 ]
 dependencies = [
     "transformers",
@@ -17,4 +17,5 @@ dependencies = [
     "pyyaml",
     "streamlit",
     "python-dotenv"
+
 ]
