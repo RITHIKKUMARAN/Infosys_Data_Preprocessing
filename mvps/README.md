@@ -1,17 +1,27 @@
+<div align="center">
 
 # 📝 NeoGlass Summarizer & Paraphraser
 
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/) 
-[![Streamlit](https://img.shields.io/badge/streamlit-1.30-orange)](https://streamlit.io/) 
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-facebook%2Fbart--large--cnn-yellow)](https://huggingface.co/facebook/bart-large-cnn) 
-[![Groq](https://img.shields.io/badge/Groq-LLaMA3.1-purple)](https://www.groq.com/) 
-[![License](https://img.shields.io/badge/license-Apache--2.0-green)](https://opensource.org/licenses/Apache-2.0)
+<p>
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python"></a>
+    <a href="https://streamlit.io/"><img src="https://img.shields.io/badge/streamlit-1.30-orange" alt="Streamlit"></a>
+    <a href="https://huggingface.co/facebook/bart-large-cnn"><img src="https://img.shields.io/badge/Hugging%20Face-facebook%2Fbart--large--cnn-yellow" alt="Hugging Face"></a>
+    <a href="https://www.groq.com/"><img src="https://img.shields.io/badge/Groq-LLaMA3.1-purple" alt="Groq"></a>
+    <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="License"></a>
+</p>
 
-**NeoGlass** is a sleek, glassmorphic web application leveraging **state-of-the-art AI models** for high-quality text summarization and paraphrasing. Built with **Streamlit**, it combines **Hugging Face summarization models** and **Groq LLaMA 3.1** paraphrasing to provide an interactive, modern UI for text processing.  
+<p>
+    <strong>NeoGlass</strong> is a sleek, glassmorphic web application leveraging <strong>state-of-the-art AI models</strong> for high-quality text summarization and paraphrasing. Built with <strong>Streamlit</strong>, it combines <strong>Hugging Face summarization models</strong> and <strong>Groq LLaMA 3.1</strong> paraphrasing to provide an interactive, modern UI for text processing.
+</p>
 
-🌐 **Try it online:** [Launch NeoGlass](https://share.streamlit.io/your-username/neoglass-summarizer/main/app.py)  
+<p>
+    🌐 <strong>Try it online:</strong> <a href="https://share.streamlit.io/your-username/neoglass-summarizer/main/app.py">Launch NeoGlass(Dummy)</a>
+</p>
 
----
+</div>
+
+
+<div align="center">
 
 ## ✨ Features
 
@@ -24,7 +34,8 @@
 | **Configurable Output Length** | Choose Short, Medium, or Long summaries | 🔧 |
 | **Modular Pipeline** | Clean backend pipeline integrating all AI services | 🛠️ |
 
----
+</div>
+
 ## 📂 File Structure
 <pre>
 mvps/
