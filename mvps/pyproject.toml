@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "text_summarization_project"
+version = "0.1.0"
+description = "Text summarization and paraphrasing project"
+authors = [
+    { name = "Thangarasu", email = "thangamani1128@gmail.com" }
+]
+dependencies = [
+    "transformers",
+    "torch",
+    "nltk",
+    "networkx",
+    "pyyaml",
+    "streamlit",
+    "python-dotenv"
+]
