@@ -1,11 +1,19 @@
 import requests
+import yaml
 
 class AbstractiveSummarizer:
-    """ Abstractive summarization using BART model. Generates new sentences that capture the meaning of the original text. """
-    def __init__(self, api_key):
+    """ Abstractive summarization using multiple models (BART, T5, Pegasus). """
+    def __init__(self, api_key, model_name='bart'):
         self.api_key = api_key
-        self.api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
         self.headers = {"Authorization": f"Bearer {api_key}"}
+
+        with open('config.yaml', 'r') as f:
+            config = yaml.safe_load(f)
+        
+        model_config = config['models']['summarization'].get(model_name, config['models']['summarization']['bart'])
+        self.api_url = f"https://api-inference.huggingface.co/models/{model_config['name']}"
+        self.default_max_summary = model_config['default_max_summary']
+        self.default_min_summary = model_config['default_min_summary']
 
     def summarize(self, text, length='medium'):
         """
@@ -20,7 +28,7 @@ class AbstractiveSummarizer:
         """
         length_map = {
             'short': {"max_length": 60, "min_length": 30},
-            'medium': {"max_length": 130, "min_length": 60},
+            'medium': {"max_length": self.default_max_summary, "min_length": self.default_min_summary},
             'long': {"max_length": 200, "min_length": 130}
         }
         
